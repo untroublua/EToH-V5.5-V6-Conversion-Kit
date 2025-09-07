@@ -1,6 +1,6 @@
 --[[
 Lighting Changer Conversion v5.5 -> v6 
-author: untroublua / @signupredirectlol
+author: untroublua / @signupredirectlol & littleBitsman
 
 Instructions:
 Run the code!
@@ -27,6 +27,38 @@ touchConfig:SetAttribute("colorSpecific", false)
 touchConfig:SetAttribute("balloon", false)
 touchConfig:SetAttribute("turret", false)
 
+local tabstr = "	"
+local function tab(size: number)
+	return string.rep(tabstr, size)
+end
+
+local matchTweeninfo = "(TweenInfo = TweenInfo%.new%(.-%))"
+local matchConfiguration = "(%s*Configuration%s*=%s*{%s*%a+%s*=%s*.-,?%s*})"
+local matchDefaultConfig = "(%s*Configuration%s*=%s*\"Default\")"
+
+local changerFnBase = `Change "%s" %s`
+local function makeChangerFn(ty: string, tweeninfostr: string, conf: string, isdef)	
+	local tStr = "{\n"
+
+	tStr ..= tab(1) .. tweeninfostr .. ","
+
+	if not isdef then
+		tStr ..= tab(1) .. conf
+	else
+		tStr ..= `\n{tab(1)}UseDefault = "TowerDefault",`
+	end
+
+	tStr ..= "\n}"
+
+	return changerFnBase:format(ty, tStr)
+end
+
+local baseLines = [[--!strict
+local Change = require(game:GetService("ReplicatedStorage").Framework.Kit.Repository.Visual.LightingChanger.TypeDefs)
+-- DON'T TOUCH THE LINE ABOVE -- -- DON'T TOUCH THE LINE ABOVE --
+
+return %s]]
+
 local function info(warn, ...)
 	if not debug then return end
 	if warn then
@@ -36,86 +68,34 @@ local function info(warn, ...)
 	end
 end
 
-local Types = {
-	Color3 = function(obj:Color3)
-		return `Color3.fromRGB({math.floor(obj.R * 255)}, {math.floor(obj.B * 255)}, {math.floor(obj.G * 255)})`
-	end,
-	TweenInfo = function(obj:TweenInfo)
-		return `TweenInfo.new({obj.Time}, {obj.EasingStyle}, {obj.EasingDirection})`
-	end,
-} :: { [string]: (obj:any) -> (string) }
-
-local function toStringInst(obj:any)
-	local ret
-	local fromTable = Types[typeof(obj)]
-	if fromTable then
-		ret = fromTable(obj)
-	else
-		ret = tostring(obj)
-	end
-
-	return ret
-end
-
 for _, oldConfig in workspace:GetDescendants() do
 	if not oldConfig:IsA("ModuleScript") or oldConfig.Name ~= "LightingConfiguration" then continue end
 	info(false, "ℹ️ Converting lighting changer:", oldConfig.Parent)
 	local toConvert = oldConfig.Parent
-	
+
 	local oldConfigTable = require(oldConfig) :: { Type:string, Configuration:{ [string]:any } | string, TweenInfo:TweenInfo }
+	
+	local src = oldConfig.Source
+	
+	local newsrc = baseLines:format(makeChangerFn(oldConfigTable.Type, src:match(matchTweeninfo), src:match(matchConfiguration), src:match(matchDefaultConfig) ~= nil))
 
-	local lightingType = oldConfigTable.Type
-	local tweenInf = toStringInst(oldConfigTable.TweenInfo)
-	local configTable = oldConfigTable.Configuration
+	info(false, newsrc)
 
-	local configTableStr
-	if configTable ~= "Default" then
-		configTableStr = ""
-		for i,v in pairs(configTable) do
-			configTableStr = configTableStr .. "\t\t" .. i .. " = " .. toStringInst(v) .. "," .. (next(configTable, i) == nil and "" or "\n")
-		end
-	else
-		configTableStr = defaultText
-	end
-	info(false, configTableStr)
+	toConvert:ClearAllChildren()
 
-	local newLightingScript = string.format(
-[[--!strict
-local Change = require(game:GetService("ReplicatedStorage").Framework.Kit.Repository.Visual.LightingChanger.TypeDefs)
--- DON'T TOUCH THE LINE ABOVE -- -- DON'T TOUCH THE LINE ABOVE --
+	-- replacing sequence
+	local newConfig = newConfig:Clone()
+	newConfig.Parent = toConvert
 
-return Change "%s" {
-	TweenInfo = %s,
-	%s = %s%s
-	%s
-}]], 
-		lightingType,
-		tweenInf,
-		(configTableStr == defaultText and "UseDefault" or "Configuration"),
-		(configTableStr == defaultText and "" or "{\n"),
-		configTableStr,
-		(configTableStr == defaultText and " " or " }")
-	)
+	local touchConfig = newConfig.TouchConfiguration
+	touchConfig:SetAttribute("player", toConvert:FindFirstChild("SupportPlayers") and toConvert.SupportPlayers.Value or false)
+	touchConfig:SetAttribute("pushbox", toConvert:FindFirstChild("SupportPushboxes") and toConvert.SupportPushboxes.Value or false)
+	touchConfig:SetAttribute("colorSpecific", toConvert:FindFirstChild("ColorSpecific") and toConvert.ColorSpecific.Value or false)
 
-	info(false, newLightingScript)
-
-	do
-		toConvert:ClearAllChildren()
-		
-		-- replacing sequence
-		local newConfig = newConfig:Clone()
-		newConfig.Parent = toConvert
-
-		local touchConfig = newConfig.TouchConfiguration
-		touchConfig:SetAttribute("player", toConvert:FindFirstChild("SupportPlayers") and toConvert.SupportPlayers.Value or false)
-		touchConfig:SetAttribute("pushbox", toConvert:FindFirstChild("SupportPushboxes") and toConvert.SupportPushboxes.Value or false)
-		touchConfig:SetAttribute("colorSpecific", toConvert:FindFirstChild("ColorSpecific") and toConvert.ColorSpecific.Value or false)
-
-		local LightingScript = Instance.new("ModuleScript")
-		LightingScript.Name = "Lighting"
-		LightingScript.Parent = newConfig
-		LightingScript.Source = newLightingScript
-	end
+	local LightingScript = Instance.new("ModuleScript")
+	LightingScript.Name = "Lighting"
+	LightingScript.Parent = newConfig
+	LightingScript.Source = newsrc
 end
 
 newConfig:Destroy()

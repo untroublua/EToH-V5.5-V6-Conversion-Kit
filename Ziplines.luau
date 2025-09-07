@@ -5,8 +5,6 @@ author: @littleBitsman & untroublua / @signupredirectlol
 Instructions:
 Run the code!
 No dependencies required
-
-CAUTION: NOT TESTED WELL MAY HAVE ISSUES (make sure you have a backup of your cos!)
 ]]
 
 local function configCheck(config, configValue)
@@ -193,7 +191,7 @@ local function loadRideModel(parent)
 	return RideModel
 end
 
-for _, End in game.Selection:Get() --[[workspace:GetDescendants()]] do
+for _, End in workspace:GetDescendants() do
 	if not (End.Name == "End" and End:IsA("Attachment")) then continue end
 	
 	local zipline = End.Parent :: BasePart
