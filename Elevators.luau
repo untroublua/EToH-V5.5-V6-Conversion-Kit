@@ -3,7 +3,7 @@ Elevator Conversion v5.5 -> v6
 author: untroublua / @signupredirectlol
 
 Instructions:
-just run the script, and it will convert the elevators
+Run the code!
 No dependencies required
 ]]
 

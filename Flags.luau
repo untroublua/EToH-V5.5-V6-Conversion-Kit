@@ -1,5 +1,11 @@
--- Flag / Tag Converter v5.5 -> v6
--- just run the script and it'll convert all the flags into tags (seen below)
+--[[
+Flags / Tags Conversion v5.5 -> v6
+author: untroublua / @signupredirectlol
+
+Instructions:
+Run the code!
+No dependencies required
+]]
 
 game.ChangeHistoryService:SetWaypoint("Convert Flags v5.5 -> v6")
 for _, v in workspace:GetDescendants() do

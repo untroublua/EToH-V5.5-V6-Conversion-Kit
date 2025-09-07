@@ -1,3 +1,12 @@
+--[[
+Boost Pads Conversion v5.5 -> v6
+author: untroublua / @signupredirectlol
+
+Instructions:
+Run the code!
+No dependencies required
+]]
+
 game.ChangeHistoryService:SetWaypoint("Convert boostpad to v6")
 
 local config = game.ServerStorage.BoostPadConfiguration
