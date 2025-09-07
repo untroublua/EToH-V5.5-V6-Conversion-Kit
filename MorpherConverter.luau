@@ -1,3 +1,13 @@
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- im not a github user so idk how to like, take care of this lmao
+
+
 -- by littlebitsman
 -- BEWARE: THIS MAY MISS SOME PROPERTIES ON PARTS, ETC. CHECK YOUR CLIENT OBJECTS AND BACKUP BEFORE USING.
 

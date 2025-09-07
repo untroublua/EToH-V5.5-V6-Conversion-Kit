@@ -7,8 +7,6 @@ Run the code!
 No dependencies required
 ]]
 
-game.ChangeHistoryService:SetWaypoint("v5.5 -> v6 Killbricks Conversion") -- pretty sure this line doesnt even work 😭
-
 local VALID_DAMAGEBRICKS = { "kills", "double", "ouch", "instakills" }
 
 for _, v in workspace:GetDescendants() do
@@ -24,3 +22,5 @@ for _, v in workspace:GetDescendants() do
 	
 	v:Destroy()
 end 
+
+game.ChangeHistoryService:SetWaypoint("v5.5 -> v6 Killbricks Conversion")

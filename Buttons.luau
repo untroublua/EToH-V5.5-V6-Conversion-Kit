@@ -7,8 +7,6 @@ Run the code!
 No dependencies required
 ]]
 
-game.ChangeHistoryService:SetWaypoint("v5.5 -> v6 Buttons Conversion")
-
 for _, v in workspace:GetDescendants() do
 	if v:IsA("TextLabel") and v.Name == "TimerLabel" and v.Parent:IsA("Model") then
 		v = v.Parent
@@ -90,3 +88,5 @@ for _, v in workspace:GetDescendants() do
 		buttonConfig.Parent = v
 	end
 end
+
+game.ChangeHistoryService:SetWaypoint("v5.5 -> v6 Buttons Conversion")

@@ -7,8 +7,6 @@ Run the code!
 No dependencies required
 ]]
 
-game.ChangeHistoryService:SetWaypoint("v5.5 -> v6 Vines Conversion") -- pretty sure this line doesnt even work 😭
-
 local function configCheck(config, configValue)
 	local foundValue = config:FindFirstChild(configValue)
 	if foundValue == nil then return false end
@@ -48,7 +46,7 @@ end
 local function loadRopeBar(parent)
 	local RopeBar = Instance.new("Part")
 	RopeBar.Name = "RopeBar"
-	RopeBar.Position = parent.AttachmentPart.Position + Vector3.new(0,2,0)
+	RopeBar.Position = parent.AttachmentPart.Position + Vector3.new(0, 1.5 * parent.AttachmentPart.Size.Y, 0)
 	RopeBar.BottomSurface = Enum.SurfaceType.Smooth
 	RopeBar.CanCollide = false
 	RopeBar.TopSurface = Enum.SurfaceType.Smooth
@@ -160,3 +158,5 @@ for _, v in workspace:GetDescendants() do
 	
 	v.Name = "Vine"
 end
+
+game.ChangeHistoryService:SetWaypoint("v5.5 -> v6 Vines Conversion")

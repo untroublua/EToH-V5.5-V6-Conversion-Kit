@@ -1,4 +1,13 @@
--- by littlebitsman
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- NOT READY FOR USE!
+-- im not a github user so idk how to like, take care of this lmao
+
+-- by littlebitsman (modulescript)
 
 type Conf = {
 	Configuration: { [string]: any } | "Default",

@@ -7,7 +7,6 @@ Run the code!
 No dependencies required
 ]]
 
-game.ChangeHistoryService:SetWaypoint("Convert Flags v5.5 -> v6")
 for _, v in workspace:GetDescendants() do
 	-- BAPs
 	if v.Name == "ButtonActivatedPlatform" then
@@ -80,3 +79,5 @@ for _, v in workspace:GetDescendants() do
 		end)
 	end
 end
+
+game.ChangeHistoryService:SetWaypoint("Convert Flags v5.5 -> v6")

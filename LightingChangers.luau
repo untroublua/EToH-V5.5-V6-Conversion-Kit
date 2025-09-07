@@ -36,7 +36,6 @@ local function info(warn, ...)
 	end
 end
 
-game.ChangeHistoryService:SetWaypoint("v5.5 -> v6 Lighting Changers Conversion") -- i dont even think this even works 😭
 local Types = {
 	Color3 = function(obj:Color3)
 		return `Color3.fromRGB({math.floor(obj.R * 255)}, {math.floor(obj.B * 255)}, {math.floor(obj.G * 255)})`
@@ -120,3 +119,5 @@ return Change "%s" {
 end
 
 newConfig:Destroy()
+
+game.ChangeHistoryService:SetWaypoint("v5.5 -> v6 Lighting Changers Conversion")

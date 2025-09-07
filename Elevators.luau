@@ -7,7 +7,6 @@ Run the code!
 No dependencies required
 ]]
 
-game.ChangeHistoryService:SetWaypoint("Elevator Conversion v5.5 -> v6")
 for _, v in workspace:GetDescendants() do
     if not v:FindFirstChild("MaxForce") then continue end
     
@@ -39,13 +38,8 @@ for _, v in workspace:GetDescendants() do
     v.Speed:Destroy()
     
     v.ClientObjectScript:Destroy()
-    pcall(function()
-        v.ClientObject:Destroy()
-    end)
-    pcall(function()
-        v.IgnorePlayers:Destroy()
-    end)
-    pcall(function()
-        v.IgnoreBoxes:Destroy()
-    end)
+    for _, v in v:GetChildren() do
+        if v:IsA("ValueBase") then v:Destroy() end
+    end
 end
+game.ChangeHistoryService:SetWaypoint("Elevator Conversion v5.5 -> v6")
