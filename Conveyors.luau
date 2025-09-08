@@ -26,6 +26,8 @@ local function loadVisual()
 	Visual.SizeRelativeOffset = Vector3.new(0, 0, -1)
 	Visual.Height = 1
 
+	visual:AddTag("OnlyInStudio")
+
 	Visual.Adornee = workspace.TowerKit.ClientSidedObjects.Conveyor
 	
 	return Visual
