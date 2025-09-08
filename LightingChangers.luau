@@ -81,12 +81,9 @@ for _, oldConfig in workspace:GetDescendants() do
 
 	info(false, newsrc)
 
-	toConvert:ClearAllChildren()
-
 	-- replacing sequence
 	local newConfig = newConfig:Clone()
-	newConfig.Parent = toConvert
-
+	
 	local touchConfig = newConfig.TouchConfiguration
 	touchConfig:SetAttribute("player", toConvert:FindFirstChild("SupportPlayers") and toConvert.SupportPlayers.Value or false)
 	touchConfig:SetAttribute("pushbox", toConvert:FindFirstChild("SupportPushboxes") and toConvert.SupportPushboxes.Value or false)
@@ -94,8 +91,12 @@ for _, oldConfig in workspace:GetDescendants() do
 
 	local LightingScript = Instance.new("ModuleScript")
 	LightingScript.Name = "Lighting"
-	LightingScript.Parent = newConfig
 	LightingScript.Source = newsrc
+
+	toConvert:ClearAllChildren()
+
+	LightingScript.Parent = newConfig
+	newConfig.Parent = toConvert
 end
 
 newConfig:Destroy()
