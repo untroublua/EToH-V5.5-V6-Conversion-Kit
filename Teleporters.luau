@@ -63,6 +63,8 @@ local function loadVisuals(parent)
 	UpDirection.Height = 1
 	UpDirection.Parent = parent
 	UpDirection.Adornee = parent
+
+	UpDirection:AddTag("OnlyInStudio")
 	
 	local LookDirection = Instance.new("ConeHandleAdornment")
 	LookDirection.Name = "LookDirection"
@@ -74,6 +76,8 @@ local function loadVisuals(parent)
 	LookDirection.Height = 1
 	LookDirection.Parent = parent
 	LookDirection.Adornee = parent
+
+	LookDirection:AddTag("OnlyInStudio")
 end
 
 for _, Destination in workspace:GetDescendants() do
