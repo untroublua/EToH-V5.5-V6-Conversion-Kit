@@ -7,13 +7,18 @@ Run the code!
 No dependencies required
 ]]
 
-for _, v in workspace:GetDescendants() do
-	if v:IsA("TextLabel") and v.Name == "TimerLabel" and v.Parent:IsA("Model") then
-		v = v.Parent
-		
-		local oldConfig = v.Configurations
-		
+local touchOptions = {
+	SupportBalloons = "balloon",
+	SupportPlayers = "player",
+	SupportPushboxes = "pushbox",
+	SupportTurrets = "turret",
+	ColorSpecific = "colorSpecific"
+}
+
+local function loadConfig(type:string)
+	if type == "Button" then
 		local buttonConfig = Instance.new("Configuration")
+		buttonConfig.Name = "ButtonConfiguration"
 		buttonConfig:AddTag("CO_Interactables/Button")
 		buttonConfig:AddTag("v6.0.2")
 		buttonConfig:SetAttribute("HideGUI", false)
@@ -24,17 +29,7 @@ for _, v in workspace:GetDescendants() do
 		buttonConfig:SetAttribute("Timer", 0)
 		buttonConfig:SetAttribute("TimerDecimalPlaces", 0)
 		buttonConfig:SetAttribute("TimerText", "{T}")
-		buttonConfig.Name = "ButtonConfiguration"
-		
-		buttonConfig:SetAttribute("Timer",oldConfig.Timer.Value) 
-		buttonConfig:SetAttribute("HideGUI",oldConfig.HideGUI.Value)
-		buttonConfig:SetAttribute("TimerDecimalPlaces",oldConfig.Timer.DecimalPlaces.Value)
-		buttonConfig:SetAttribute("PressOffset",CFrame.new(0,oldConfig.ButtonPressOffset.Value,0))
-		
-		local oldTimerText = oldConfig:FindFirstChild("TimerText") and oldConfig.TimerText.Value ~= "" :: TextLabel
-		local timerText = oldTimerText and string.gsub(oldTimerText.Value, "`", "{T}")
-		if timerText then buttonConfig:SetAttribute("TimerText", timerText) end
-		
+
 		local touchConfig = Instance.new("Configuration")
 		touchConfig.Parent = buttonConfig
 		touchConfig.Name = "TouchConfiguration"
@@ -44,13 +39,7 @@ for _, v in workspace:GetDescendants() do
 		touchConfig:SetAttribute("colorSpecific", false)
 		touchConfig:SetAttribute("balloon", false)
 		touchConfig:SetAttribute("turret", false)
-		
-		touchConfig:SetAttribute("player", oldConfig:FindFirstChild("SupportPlayers") and oldConfig.SupportPlayers.Value or false)
-		touchConfig:SetAttribute("pushbox", oldConfig:FindFirstChild("SupportPushboxes") and oldConfig.SupportPushboxes.Value or false)
-		touchConfig:SetAttribute("colorSpecific", oldConfig:FindFirstChild("ColorSpecific") and oldConfig.ColorSpecific.Value or false)
-		touchConfig:SetAttribute("balloon", oldConfig:FindFirstChild("SupportBalloons") and oldConfig.SupportBalloons.Value or false)
-		touchConfig:SetAttribute("turret", oldConfig:FindFirstChild("SupportTurrets") and oldConfig.SupportTurrets.Value or false)
-		
+
 		local tweenConfig = Instance.new("Configuration")
 		tweenConfig.Parent = buttonConfig
 		tweenConfig.Name = "TweenConfiguration"
@@ -58,12 +47,8 @@ for _, v in workspace:GetDescendants() do
 		tweenConfig:SetAttribute("Style", Enum.EasingStyle.Linear)
 		tweenConfig:SetAttribute("Time", 1)
 
-		buttonConfig.Parent = v 
-		oldConfig:Destroy() 
-		v.Pressed:Destroy()
-		v.TimerLabel:ClearAllChildren()
-		v.TimerLabel.Parent = buttonConfig
-	elseif v.Name == "ButtonDeactivator" then		
+		return buttonConfig
+	elseif type == "ButtonDeactivator" then
 		local buttonConfig = Instance.new("Configuration")
 		buttonConfig:AddTag("CO_Interactables/ButtonDeactivator")
 		buttonConfig:AddTag("v6.0.0")
@@ -79,13 +64,72 @@ for _, v in workspace:GetDescendants() do
 		touchConfig:SetAttribute("colorSpecific", false)
 		touchConfig:SetAttribute("balloon", false)
 		touchConfig:SetAttribute("turret", false)
+
+		return buttonConfig
+	end
+end
+
+local function applyAttr(par: Instance, conf: Configuration, valueBaseName: string, attrName: string?)
+	if not attrName then 
+		attrName = valueBaseName
+	end
+
+	if par:FindFirstChild(valueBaseName) and par:FindFirstChild(valueBaseName):IsA("ValueBase") then
+		conf:SetAttribute(attrName, par[valueBaseName].Value)
+		par[valueBaseName]:Destroy()
+	end
+end
+
+local function safeDestroy(parent:Instance, instName:string, type:string?)
+	pcall(function()
+		if type then if not (parent:FindFirstChild(instName) and parent[instName]:IsA(type)) then return end end
+		parent[instName]:Destroy()
+	end)
+end
+
+for _, v in workspace:GetDescendants() do
+	if v.Name == "ButtonPart" and v.Parent:FindFirstChild("Configurations") then
+		v = v.Parent
 		
-		touchConfig:SetAttribute("player", v:FindFirstChild("SupportPlayers") and v.SupportPlayers.Value or false)
-		touchConfig:SetAttribute("pushbox", v:FindFirstChild("SupportPushboxes") and v.SupportPushboxes.Value or false)
+		local oldConfig = v.Configurations
 		
-		v:ClearAllChildren()
+		local buttonConfig = loadConfig("Button")
+		local touchConfig = buttonConfig.TouchConfiguration
+		local tweenConfig = buttonConfig.TweenConfiguration
+
+		buttonConfig:SetAttribute("Timer",oldConfig.Timer.Value) 
+		buttonConfig:SetAttribute("HideGUI",oldConfig.HideGUI.Value)
+		buttonConfig:SetAttribute("TimerDecimalPlaces",oldConfig.Timer.DecimalPlaces.Value)
+		buttonConfig:SetAttribute("PressOffset",CFrame.new(0,oldConfig.ButtonPressOffset.Value,0))
+		
+		local oldTimerText = oldConfig:FindFirstChild("TimerText") and oldConfig.TimerText.Value ~= "" :: TextLabel
+		local timerText = oldTimerText and string.gsub(oldTimerText.Value, "`", "{T}")
+		if timerText then buttonConfig:SetAttribute("TimerText", timerText) end
+
+		for old, new in touchOptions do
+			applyAttr(c, touchConfig, old, new)
+		end
+
+		--TODO: check the script for easing + time for button tween
+
+		buttonConfig.Parent = v 
+		oldConfig:Destroy() 
+		v.Pressed:Destroy()
+		v.TimerLabel:ClearAllChildren()
+		v.TimerLabel.Parent = buttonConfig
+	elseif v.Name == "ButtonDeactivator" then		
+		local buttonConfig = loadConfig("ButtonDeactivator")
+		local touchConfig = buttonConfig.TouchConfiguration
+
+		for old, new in touchOptions do
+			applyAttr(c, touchConfig, old, new)
+		end
 		
 		buttonConfig.Parent = v
+
+		safeDestroy(v, "ColorSpecific")
+		safeDestroy(v, "SupportPlayers")
+		safeDestroy(v, "SupportPushboxes")
 	end
 end
 

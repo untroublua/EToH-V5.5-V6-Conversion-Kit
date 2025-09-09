@@ -191,6 +191,13 @@ local function loadRideModel(parent)
 	return RideModel
 end
 
+local function safeDestroy(parent:Instance, instName:string, type:string)
+	pcall(function()
+		if type then if not (parent:FindFirstChild(instName) and parent[instName]:IsA(type)) then return end end
+		parent[instName]:Destroy()
+	end)
+end
+
 for _, End in workspace:GetDescendants() do
 	if not (End.Name == "End" and End:IsA("Attachment")) then continue end
 	
@@ -219,8 +226,13 @@ for _, End in workspace:GetDescendants() do
 	loadSounds(ziplineModel)
 	loadGuideEffects(ziplineModel)
 	
-	zipline:ClearAllChildren()
-	
+	safeDestroy(zipline,"CannotDismount")
+	safeDestroy(zipline,"ClientObject")
+	safeDestroy(zipline,"End","Attachment")
+	safeDestroy(zipline,"PC")
+	safeDestroy(zipline,"PropelVelocity")
+	safeDestroy(zipline,"Start","Attachment")
+	safeDestroy(zipline,"ClientObjectScript")
 end
 
 game.ChangeHistoryService:SetWaypoint("Convert Ziplines v5.5 -> v6")

@@ -33,17 +33,21 @@ local function loadConfig()
 	
 	return BoostPadConfiguration
 end
+
+local function safeDestroy(parent:Instance, instName:string, type:string)
+	pcall(function()
+		if type then if not (parent:FindFirstChild(instName) and parent[instName]:IsA(type)) then return end end
+		parent[instName]:Destroy()
+	end)
+end
+
 for _, pad in workspace:GetDescendants() do
 	local boostName = pad.Name
 	local type = BoostPadTypes[boostName]
-	print(boostName,type)
 	if not type or not pad.Parent:FindFirstChild("Distance") then continue end
 	pad = pad.Parent
-	print(type)
 	local type = BoostPadTypes[boostName]
-	print(type)
 	local boost = pad:FindFirstChild(boostName) :: NumberValue
-	print(boost)
 	
 	local config = loadConfig()
 	config:SetAttribute("Type",type)
@@ -51,11 +55,10 @@ for _, pad in workspace:GetDescendants() do
 	config:SetAttribute("Distance", pad.Distance.Value == 0 and -pad.Size.Y or pad.Distance.Value)
 	config.Parent = pad
 
-	pad.ClientObject:Destroy()
-	pad.Distance:Destroy()
+	safeDestroy(pad, "ClientObject")
+	safeDestroy(pad, "Distance")
 	boost:Destroy()
-	pad.ClientObjectScript:Destroy()
-	pad.Parent = workspace.TowerKit.ClientSidedObjects
+	safeDestroy(pad, "ClientObjectScript")
 	pad.Name = `{type} BoostPad`
 end
 

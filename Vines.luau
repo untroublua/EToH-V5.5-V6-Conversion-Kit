@@ -120,6 +120,13 @@ local function loadConfig(parent)
 	return VineConfiguration
 end
 
+local function safeDestroy(parent:Instance, instName:string, type:string)
+	pcall(function()
+		if type then if not (parent:FindFirstChild(instName) and parent[instName]:IsA(type)) then return end end
+		parent[instName]:Destroy()
+	end)
+end
+
 for _, v in workspace:GetDescendants() do
 	if v.Name ~= "RopeLength" then continue end
 	v = v.Parent
@@ -142,8 +149,11 @@ for _, v in workspace:GetDescendants() do
 	
 	loadAttachmentPartChildren(AttachmentPart)
 	
-	VinePart:ClearAllChildren()
-	VinePart.Shape = Enum.PartType.Cylinder
+	if VinePart:FindFirstChildWhichIsA("SpecialMesh") then 
+		VinePart.Shape = Enum.PartType.Cylinder
+		VinePart:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
+	end
+	
 	loadVinePartChildren(VinePart)
 	
 	config:SetAttribute("AllowJumpDismount", configCheck(v,"AllowJumpDismount"))
@@ -152,9 +162,12 @@ for _, v in workspace:GetDescendants() do
 	
 	vineConstraint.Length = (configCheck(v,"RopeLength") and v.RopeLength.Value) or 12
 	
-	for _, v in v:GetChildren() do
-		if v:IsA("ValueBase") then v:Destroy() end
-	end
+	safeDestroy(v,"AllowJumpDismount")
+	safeDestroy(v,"ClientObject")
+	safeDestroy(v,"KeepVelocity")
+	safeDestroy(v,"RespawnTime")
+	safeDestroy(v,"RopeLength")
+	safeDestroy(v,"ClientObjectScript")
 	
 	v.Name = "Vine"
 end
