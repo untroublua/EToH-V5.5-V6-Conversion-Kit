@@ -55,6 +55,7 @@ local function loadRopeBar(parent)
 	RopeBar.Orientation = Vector3.zero
 	RopeBar.Anchored = true
 	RopeBar.CustomPhysicalProperties = PhysicalProperties.new(50, 0.3, 0.5)
+	RopeBar.CastShadow = false
 	
 	RopeBar.Parent = parent
 	

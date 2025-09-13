@@ -146,6 +146,7 @@ local function loadRideModel(parent)
 	RopeGuide.CustomPhysicalProperties = PhysicalProperties.new(50, 0.3, 0.5)
 	RopeGuide.Shape = Enum.PartType.Ball
 	RopeGuide.Parent = RideModel
+	RopeGuide.CastShadow = false
 
 	local GuideAttachment = Instance.new("Attachment")
 	GuideAttachment.Name = "GuideAttachment"
@@ -163,6 +164,7 @@ local function loadRideModel(parent)
 	RopeBar.Anchored = true
 	RopeBar.CustomPhysicalProperties = PhysicalProperties.new(50, 0.3, 0.5)
 	RopeBar.Parent = RideModel
+	RopeBar.CastShadow = false
 
 	local BarAttachment = Instance.new("Attachment")
 	BarAttachment.Name = "BarAttachment"
