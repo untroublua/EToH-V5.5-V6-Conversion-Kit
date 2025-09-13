@@ -1,6 +1,6 @@
 --[[
 Teleporters Conversion v5.5 -> v6
-author: untroublua / @signupredirectlol & littleBitsman
+author: untroublua / @signupredirectlol
 
 Instructions:
 Run the code!
@@ -11,6 +11,7 @@ local easingStylePattern = "Enum%.EasingStyle%.%a+"
 local easingDirPattern = "Enum%.EasingDirection%.%a+"
 
 local function applyAttr(par: Instance, conf: Configuration, valueBaseName: string, attrName: string?)
+	-- function made by littleBitsman
 	if not attrName then 
 		attrName = valueBaseName
 	end

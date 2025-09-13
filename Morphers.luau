@@ -15,6 +15,7 @@ local touchOptions = {
 }
 
 local function applyAttr(par: Instance, conf: Configuration, valueBaseName: string, attrName: string?)
+	-- function made by littleBitsman
 	if not attrName then 
 		attrName = valueBaseName
 	end
