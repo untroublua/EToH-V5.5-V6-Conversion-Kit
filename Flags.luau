@@ -16,67 +16,46 @@ for _, v in workspace:GetDescendants() do
 		end)
 	end
 	if v:FindFirstChild("ButtonActivated") then
-		pcall(function()
-			v.ButtonActivated:Destroy()
-			v:AddTag("ButtonActivated")
-		end)
+		v.ButtonActivated:Destroy()
+		v:AddTag("ButtonActivated")
 	end
 	if v:FindFirstChild("Invert") then
-		pcall(function()
-			v.Invert:Destroy()
-			v:AddTag("Invert")
-		end)
+		v.Invert:Destroy()
+		v:AddTag("Invert")
 	end
 	if v:FindFirstChild("FullHide") then
-		pcall(function()
-			v.FullHide:Destroy()
-			v:AddTag("FullHide")
-		end)
+		v.FullHide:Destroy()
+		v:AddTag("FullHide")
 	end
 	if v:FindFirstChild("IgnoreTransparency") then
-		pcall(function()
-			v.IgnoreTransparency:Destroy()
-			v:AddTag("IgnoreTransparency")
-		end)
+		v.IgnoreTransparency:Destroy()
+		v:AddTag("IgnoreTransparency")
 	end
 	if v:FindFirstChild("IgnoreCanCollide") then
-		pcall(function()
-			v.IgnoreCanCollide:Destroy()
-			v:AddTag("IgnoreCanCollide")
-		end)
+		v.IgnoreCanCollide:Destroy()
+		v:AddTag("IgnoreCanCollide")
 	end
 	if v:FindFirstChild("IgnoreAll") then
-		pcall(function()
-			v.IgnoreAll:Destroy()
-			v:AddTag("IgnoreAll")
-		end)
+		v.IgnoreAll:Destroy()
+		v:AddTag("IgnoreAll")
 	end
 	if v:FindFirstChild("ColorOverride") then
-		pcall(function()
-			v:SetAttribute("ColorOverride", v.ColorOverride.Value)
-			v.ColorOverride:Destroy()
-		end)
+		v:SetAttribute("ColorOverride", v.ColorOverride.Value)
+		v.ColorOverride:Destroy()
 	end
 	if v:FindFirstChild("SetTransparency") then
-		pcall(function()
-			v:SetAttribute("SetTransparency",v.SetTransparency.Value)
-			v.SetTransparency:Destroy()
-		end)
+		v:SetAttribute("SetTransparency",v.SetTransparency.Value)
+		v.SetTransparency:Destroy()
 	end
 
 	-- general
 	if v:FindFirstChild("SetCollisionGroup") then
-		pcall(function()
-			v.CollisionGroup = v.SetCollisionGroup.Value
-			v.SetCollisionGroup:Destroy()
-		end)
-
+		v.CollisionGroup = v.SetCollisionGroup.Value
+		v.SetCollisionGroup:Destroy()
 	end
 	if v:FindFirstChild("Invisible") then
-		pcall(function()
-			v:AddTag("Invisible")
-			v.Invisible:Destroy()
-		end)
+		v:AddTag("Invisible")
+		v.Invisible:Destroy()
 	end
 end
 
