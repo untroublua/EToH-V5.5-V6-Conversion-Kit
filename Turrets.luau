@@ -5,12 +5,14 @@ author: untroublua / @signupredirectlol
 Instructions:
 Run the code!
 No dependencies required
+
+CAUTION: THIS SCRIPT IS NOT TESTED THOROUGHLY
 ]]
 
 local function loadConfig()
 	local TurretConfiguration = Instance.new("Configuration")
 	TurretConfiguration.Name = "TurretConfiguration"
-	
+
 	TurretConfiguration:AddTag("CO_Interactables/Turret")
 	TurretConfiguration:AddTag("v6.0.1")
 	TurretConfiguration:SetAttribute("DestroyOnTouch", true)
@@ -20,7 +22,7 @@ local function loadConfig()
 	TurretConfiguration:SetAttribute("ActivatorCooldown", 1)
 	TurretConfiguration:SetAttribute("Range", 50)
 	TurretConfiguration:SetAttribute("Damage", 5)
-	
+
 	return TurretConfiguration
 end
 
@@ -42,18 +44,18 @@ local function safeDestroy(parent:Instance, instName:string)
 	end)
 end
 
-for _, bullet in game.Selection:Get() do
-	local model = bullet.Parent
+for _, bullet in workspace:GetDescendants() do
+	if not (bullet:IsA("BasePart") and bullet.Name == "Bullet" and bullet.Parent and bullet.Parent:FindFirstChildWhichIsA("ModuleScript",true) and bullet.Parent:FindFirstChildWhichIsA("ModuleScript",true).Source:match("presetBullet")) then continue end
+
+	local model = bullet.Parent 
 	local coScript = model:FindFirstChildWhichIsA("ModuleScript",true)
-	
-	if not (bullet:IsA("BasePart") and bullet.Name == "Bullet" and coScript and coScript.Source:match("presetBullet")) then continue end
-	
+
 	local turret = coScript.Parent
 	turret.Name = "Turret"
-	
+
 	local config = loadConfig()
 	config.Parent = model
-	
+
 	applyAttr(model, config, "Damage")
 	applyAttr(model, config, "Delay","FireRate")
 	config:SetAttribute("Speed", model.Speed.Value)
@@ -61,20 +63,20 @@ for _, bullet in game.Selection:Get() do
 	config:SetAttribute("MaxLifetime", model.Distance.Value / model.Speed.Value)
 	model.Speed:Destroy()
 	model.Distance:Destroy()
-	
+
 	local Activators = Instance.new("Folder")
 	Activators.Name = "Activators"
 	Activators.Parent = model
-	
+
 	local bulletModel = Instance.new("Model")
 	bulletModel.Name = "Bullet"
 	bullet.Parent = bulletModel
 	bulletModel.PrimaryPart = bullet
 	bulletModel.Parent = model
 	bulletModel:AddTag("SkipObjectLoad")
-	
+
 	config:SetAttribute("DestroyOnTouch", not ((model:FindFirstChild("IgnoreParts") and model.IgnoreParts.Value) or (model:FindFirstChild("IgnorePlayers") and model.IgnorePlayers.Value) or (bullet:FindFirstChild("IgnoreBullets") and bullet.IgnoreBullets.Value)))
-	
+
 	safeDestroy(model,"ClientObject")
 	safeDestroy(model, "IgnorePlayers")
 	safeDestroy(model, "IgnoreParts")
