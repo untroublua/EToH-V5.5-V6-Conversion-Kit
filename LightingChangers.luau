@@ -1,6 +1,6 @@
 --[[
 Lighting Changer Conversion v5.5 -> v6 
-author: untroublua / @signupredirectlol & littleBitsman
+author: littleBitsman & untroublua / @signupredirectlol
 
 Instructions:
 Run the code!
@@ -11,21 +11,43 @@ local debug = true
 
 local defaultText = "\"TowerDefault\""
 
-local newConfig = Instance.new("Configuration")
-newConfig.Name = "LightingChangerConfiguration"
-newConfig:AddTag("CO_Visual/LightingChanger")
-newConfig:AddTag("v6.0.0")
-newConfig:SetAttribute("ChangeOnLoad", false)
+local function loadConfig()
+	local newConfig = Instance.new("Configuration")
+	newConfig.Name = "LightingChangerConfiguration"
+	newConfig:AddTag("CO_Visual/LightingChanger")
+	newConfig:AddTag("v6.0.0")
+	newConfig:SetAttribute("ChangeOnLoad", false)
 
-local touchConfig = Instance.new("Configuration")
-touchConfig.Parent = newConfig
-touchConfig.Name = "TouchConfiguration"
-touchConfig:SetAttribute("canFlip",false)
-touchConfig:SetAttribute("player", false)
-touchConfig:SetAttribute("pushbox", false)
-touchConfig:SetAttribute("colorSpecific", false)
-touchConfig:SetAttribute("balloon", false)
-touchConfig:SetAttribute("turret", false)
+	local touchConfig = Instance.new("Configuration")
+	touchConfig.Parent = newConfig
+	touchConfig.Name = "TouchConfiguration"
+	touchConfig:SetAttribute("canFlip",false)
+	touchConfig:SetAttribute("player", false)
+	touchConfig:SetAttribute("pushbox", false)
+	touchConfig:SetAttribute("colorSpecific", false)
+	touchConfig:SetAttribute("balloon", false)
+	touchConfig:SetAttribute("turret", false)
+	
+	return newConfig
+end
+
+local function applyAttr(par: Instance, conf: Configuration, valueBaseName: string, attrName: string?)
+	if not attrName then 
+		attrName = valueBaseName
+	end
+
+	if par:FindFirstChild(valueBaseName) and par:FindFirstChild(valueBaseName):IsA("ValueBase") then
+		conf:SetAttribute(attrName, par[valueBaseName].Value)
+		par[valueBaseName]:Destroy()
+	end
+end
+
+local function safeDestroy(parent:Instance, instName:string, type:string)
+	pcall(function()
+		if type then if not (parent:FindFirstChild(instName) and parent[instName]:IsA(type)) then return end end
+		parent[instName]:Destroy()
+	end)
+end
 
 local tabstr = "	"
 local function tab(size: number)
@@ -82,21 +104,18 @@ for _, oldConfig in workspace:GetDescendants() do
 	info(false, newsrc)
 
 	-- replacing sequence
-	local newConfig = newConfig:Clone()
-	
+	local newConfig = loadConfig()
 	local touchConfig = newConfig.TouchConfiguration
-	touchConfig:SetAttribute("player", toConvert:FindFirstChild("SupportPlayers") and toConvert.SupportPlayers.Value or false)
-	touchConfig:SetAttribute("pushbox", toConvert:FindFirstChild("SupportPushboxes") and toConvert.SupportPushboxes.Value or false)
-	touchConfig:SetAttribute("colorSpecific", toConvert:FindFirstChild("ColorSpecific") and toConvert.ColorSpecific.Value or false)
+	applyAttr(touchConfig, toConvert, "SupportPlayers", "player")
+	applyAttr(touchConfig, toConvert, "SupportPushboxes", "pushbox")
+	applyAttr(touchConfig, toConvert, "ColorSpecific", "colorSpecific")
+	newConfig.Parent = toConvert
 
+	safeDestroy(toConvert,"LightingConfiguration")
 	local LightingScript = Instance.new("ModuleScript")
 	LightingScript.Name = "Lighting"
 	LightingScript.Source = newsrc
-
-	toConvert:ClearAllChildren()
-
 	LightingScript.Parent = newConfig
-	newConfig.Parent = toConvert
 end
 
 newConfig:Destroy()
