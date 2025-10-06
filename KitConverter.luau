@@ -1,5 +1,5 @@
 -- Custom EToH V6 converter by @TerribleAtCreating
--- NOTICE: This has no compatibility with CUSTOM CLIENT OBJECTS or MODIFIED CLIENT OBJECTS!
+-- NOTICE: This has no compatibility with CUSTOM CLIENT OBJECTS or MODIFIED CLIENT OBJECTS! (CCOs / ECOs)
 -- You will have to manually convert them to the new format.
 
 -- To use this, paste it into your command bar. If anything doesn't work, no changes will be made.
