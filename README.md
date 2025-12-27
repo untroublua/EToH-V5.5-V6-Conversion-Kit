@@ -7,7 +7,8 @@ In preparation for the conversion:
 - You will have to move the kit away from your original tower if it overlaps.
 
 Then, paste the following code below into your command bar.
-require(game:FindFirstChild("KIT-MIGRATE-v6", true))
+
+`require(game:FindFirstChild("KIT-MIGRATE-v6", true))`
 
 <<<-------------------------------------------------------------------------------------------------------->>>
 
