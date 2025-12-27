@@ -9,9 +9,6 @@ In preparation for the conversion:
 Then, paste the following code below into your command bar.
 
 `require(game:FindFirstChild("KIT-MIGRATE-v6", true))`
-
-<<<-------------------------------------------------------------------------------------------------------->>>
-
 # NOTICE
 The converter has **NO COMPATIBILITY** with CUSTOM CLIENT OBJECTS or *(some)* NESTED CLIENT OBJECTS!
 This also includes client objects that were considered custom before the release of Kits v6+.
