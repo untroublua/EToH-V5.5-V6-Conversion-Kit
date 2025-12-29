@@ -2,7 +2,7 @@
 Download the latest release from the [releases](https://github.com/untroublua/EToH-V5.5-V6-Conversion-Kit/releases) and insert the rbxm into the workspace.
 
 In preparation for the conversion:
-- Make sure that the place you are running this script in is the EToH-supplied v6.1.1 kit place.
+- Make sure that the place you are running this script in is the [EToH-supplied v6 kit place](https://www.roblox.com/games/104814418357350/Eternal-Towers-of-Hell-Kit-V6).
 - Paste the v5.5 tower in the Workspace.
 - You will have to move the custom client objects out of your tower, then convert them afterwards.
 - You will have to move the kit away from your original tower if it overlaps.
